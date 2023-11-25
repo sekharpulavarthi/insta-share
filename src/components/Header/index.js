@@ -1,4 +1,15 @@
+import Cookies from "js-cookie";
+import { useHistory } from "react-router-dom";
+
 const Header = () => {
+  const history = useHistory();
+
+  const onClickLogout = () => {
+    const jwtToken = Cookies.get("jwt_token");
+    Cookies.remove(jwtToken);
+    history.replace("/login");
+  };
+
   return (
     <div className="flex justify-around h-[64px] bg-[#FFF] border border-b-[#DBDBDB] py-8">
       <div className="flex items-center">
@@ -33,7 +44,10 @@ const Header = () => {
         </div>
         <p className="ml-8">Home</p>
         <p className="ml-4">Profile</p>
-        <button className="text-white w-[86px] rounded-sm py-2 px-5 bg-[#4094EF] ml-6">
+        <button
+          onClick={onClickLogout}
+          className="text-white w-[86px] rounded-sm py-2 px-5 bg-[#4094EF] ml-6"
+        >
           Logout
         </button>
       </div>

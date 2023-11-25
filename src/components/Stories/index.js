@@ -1,5 +1,11 @@
 import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
+import Header from "../Header";
+import StoryItem from "../StoryItem";
+import Slider from "react-slick";
+
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 const apiStatusConstants = {
   initial: "INITIAL",
@@ -18,7 +24,7 @@ const Stories = () => {
 
   const getStoriesData = async () => {
     const jwtToken = Cookies.get("jwt_token");
-
+    setApiStatus(apiStatusConstants.loading);
     const options = {
       headers: {
         Authorization: `Bearer ${jwtToken}`,
@@ -29,12 +35,40 @@ const Stories = () => {
       options
     );
     const jsonData = await response.json();
-    console.log(jsonData);
+
+    if (response.ok) {
+      setApiStatus(apiStatusConstants.success);
+      const updatedData = jsonData.users_stories.map((storyItem) => ({
+        storyUrl: storyItem.story_url,
+        userId: storyItem.user_id,
+        userName: storyItem.user_name,
+      }));
+      setStoriesData(updatedData);
+    }
+  };
+
+  const settings = {
+    dots: false,
+    slidesToShow: 7,
+    slidesToScroll: 1,
+    infinite: false,
   };
 
   return (
     <div>
-      <h1>Qwerty</h1>
+      {apiStatus === "Loading" ? (
+        <h1>Loading...</h1>
+      ) : (
+        <div className="flex justify-around">
+          <ul className="w-[75%] p-[40px] bg-[#FAFAFA]">
+            <Slider {...settings}>
+              {storiesData.map((storyItem) => (
+                <StoryItem storyData={storyItem} key={storyItem.userId} />
+              ))}
+            </Slider>
+          </ul>
+        </div>
+      )}
     </div>
   );
 };

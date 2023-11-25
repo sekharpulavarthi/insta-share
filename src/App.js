@@ -1,12 +1,18 @@
-import { Route, BrowserRouter } from "react-router-dom";
+import { Route, BrowserRouter, Switch, Redirect } from "react-router-dom";
 import "./App.css";
 import LoginPage from "./components/LoginPage";
-import Stories from "./components/Stories";
+import Home from "./components/Home";
+import ProtectedRoute from "./components/ProtectedRoute";
+import NotFound from "./components/NotFound";
 
 const App = () => (
   <BrowserRouter>
-    <Route path="/login" component={LoginPage} />
-    <Route path="/" component={Stories} />
+    <Switch>
+      <Route path="/login" component={LoginPage} />
+      <ProtectedRoute path="/" component={Home} />
+      <Route path="/not-found" component={NotFound} />
+      <Redirect to="/not-found" />
+    </Switch>
   </BrowserRouter>
 );
 
