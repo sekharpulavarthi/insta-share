@@ -11,7 +11,7 @@ const StoryItem = (props) => {
         src={storyUrl}
         alt={userName}
       />
-      <p className="text-base overflow-hidden whitespace-nowrap overflow-ellipsis">
+      <p className="mt-2 text-xs overflow-hidden whitespace-nowrap overflow-ellipsis">
         {userName}
       </p>
     </li>

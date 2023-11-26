@@ -59,8 +59,8 @@ const Stories = () => {
       {apiStatus === "Loading" ? (
         <h1>Loading...</h1>
       ) : (
-        <div className="flex justify-around">
-          <ul className="w-[75%] p-[40px] bg-[#FAFAFA]">
+        <div className="flex justify-around bg-[#FAFAFA]">
+          <ul className="w-[75%] p-[40px] ">
             <Slider {...settings}>
               {storiesData.map((storyItem) => (
                 <StoryItem storyData={storyItem} key={storyItem.userId} />
