@@ -6,6 +6,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import NotFound from "./components/NotFound";
 import UserProfileDetails from "./components/UserProfileDetails";
 import Profile from "./components/Profile";
+import SearchPosts from "./components/SearchPosts";
 
 const App = () => {
   return (
@@ -19,6 +20,7 @@ const App = () => {
           component={UserProfileDetails}
         />
         <ProtectedRoute exact path="/my-profile" component={Profile} />
+        <ProtectedRoute exact path="/posts" component={SearchPosts} />
         <Route path="/not-found" component={NotFound} />
         <Redirect to="/not-found" />
       </Switch>

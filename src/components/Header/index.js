@@ -1,8 +1,13 @@
 import Cookies from "js-cookie";
-import { useHistory, Link } from "react-router-dom";
+import { useState } from "react";
+import { useHistory, Link, useNavigate } from "react-router-dom";
+import { useRouteMatch } from "react-router-dom/cjs/react-router-dom.min";
 
 const Header = (props) => {
   const history = useHistory();
+  const [searchInput, setSearchInput] = useState("");
+  const match = useRouteMatch();
+  const { path } = match;
 
   const onClickLogout = () => {
     const jwtToken = Cookies.get("jwt_token");
@@ -10,19 +15,21 @@ const Header = (props) => {
     history.replace("/login");
   };
 
-  const { getSearchResultsFn, searchInput, setSearchInput } = props;
+  const onClickSearch = () => {
+    history.replace(`/posts?search=${searchInput}`);
+  };
 
   const renderSearchInput = () => (
     <div className="flex border border-[#DBDBDB]">
       <input
         value={searchInput}
         onChange={(e) => setSearchInput(e.target.value)}
-        type="text"
+        type="search"
         placeholder="Search Caption"
         className="bg-[#FAFAFA] pl-2 w-[180px] focus:outline-none h-[26px]"
       />
       <button
-        onClick={() => getSearchResultsFn(searchInput)}
+        onClick={onClickSearch}
         className="w-[34px] h-[26px] bg-[#DBDBDB] flex items-center justify-center"
       >
         <img
@@ -58,10 +65,26 @@ const Header = (props) => {
         <div className="flex items-center">
           {renderSearchInput()}
           <Link to="/">
-            <p className="ml-8 text-xs font-bold">Home</p>
+            <p
+              className={
+                path === "/"
+                  ? "ml-8 text-xs font-bold text-[#4094EF]"
+                  : "ml-8 text-xs font-bold"
+              }
+            >
+              Home
+            </p>
           </Link>
           <Link to="/my-profile">
-            <p className="ml-4 text-xs font-bold">Profile</p>
+            <p
+              className={
+                path === "/my-profile"
+                  ? "ml-4 text-xs font-bold text-[#4094EF]"
+                  : "ml-4 text-xs font-bold"
+              }
+            >
+              Profile
+            </p>
           </Link>
           <button
             onClick={onClickLogout}

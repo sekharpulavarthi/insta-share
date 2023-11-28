@@ -1,9 +1,10 @@
 import Header from "../Header";
-import Stories from "../Stories";
 import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
 import Loader from "react-loader-spinner";
 import PostItem from "../PostItem";
+import { useLocation } from "react-router-dom/cjs/react-router-dom.min";
+import Stories from "../Stories";
 import LoadingView from "../LoadingView";
 
 const apiStatusConstants = {
@@ -13,13 +14,17 @@ const apiStatusConstants = {
   success: "SUCCESS",
 };
 
-const Home = () => {
+const SearchPosts = () => {
   const [postsData, setPostsData] = useState([]);
   const [apiStatus, setApiStatus] = useState(apiStatusConstants.initial);
 
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const searchParam = queryParams.get("search");
+
   useEffect(() => {
     getPostsData();
-  }, []);
+  }, [searchParam]);
 
   const getFormattedData = (postItem) => ({
     comments: postItem.comments.map((commentItem) => ({
@@ -50,7 +55,7 @@ const Home = () => {
     };
 
     const response = await fetch(
-      "https://apis.ccbp.in/insta-share/posts",
+      `https://apis.ccbp.in/insta-share/posts?search=${searchParam}`,
       options
     );
     if (response.ok) {
@@ -102,44 +107,60 @@ const Home = () => {
   };
 
   const renderFailureView = () => (
-    <div className="w-full flex justify-center h-screen">
-      <div className="w-[75%] flex justify-center items-center border">
-        <div className="flex flex-col justify-center items-center w-[50%]">
-          <img
-            src="https://res.cloudinary.com/dafvz3qwu/image/upload/v1701149344/alert-triangle_zn9pox.svg"
-            alt="all-stories-error"
-            className="w-12 h-12 mb-4"
-          />
-          <h1 className="text-base mb-4">
-            Something went wrong. Please try again
-          </h1>
-          <button
-            onClick={getPostsData}
-            className="bg-[#4094EF] text-base text-white py-1 px-3 rounded-md"
-          >
-            Try again
-          </button>
-        </div>
-      </div>
+    <div className="products-error-view-container">
+      <img
+        src="https://assets.ccbp.in/frontend/react-js/nxt-trendz/nxt-trendz-products-error-view.png"
+        alt="all-products-error"
+        className="products-failure-img"
+      />
+      <h1 className="product-failure-heading-text">
+        Oops! Something Went Wrong
+      </h1>
+      <p className="products-failure-description">
+        We are having some trouble processing your request. Please try again.
+      </p>
+    </div>
+  );
+
+  const renderNoSearchResultsView = () => (
+    <div className="flex flex-col items-center h-screen justify-center">
+      <img
+        className="w-[500px] h-[420px]"
+        alt="search-not-found"
+        src="https://res.cloudinary.com/dwux3vh4t/image/upload/v1690380372/Group_jrlyey.png"
+      />
+      <h1 className="text-2xl font-medium mb-4">Search Not Found</h1>
+      <p className="text-base text-center text-[#989898] mb-6">
+        Try different keyword or try again.
+      </p>
     </div>
   );
 
   const renderPostsView = () => (
-    <div className="w-full flex flex-col justify-center items-center">
-      {postsData.map((postItem) => (
-        <PostItem
-          postItemDetails={postItem}
-          key={postItem.postId}
-          updateLikeStatus={updateLikeStatus}
-        />
-      ))}
+    <div className="flex flex-col justify-center items-start">
+      <h1 className="w-[75%] self-center font-bold mt-4 mb-4">
+        Search Results
+      </h1>
+      <div className="w-full flex flex-col justify-center items-center">
+        <div className="flex flex-col justify-center items-center w-[100%]">
+          {postsData.map((postItem) => (
+            <PostItem
+              postItemDetails={postItem}
+              key={postItem.postId}
+              updateLikeStatus={updateLikeStatus}
+            />
+          ))}
+        </div>
+      </div>
     </div>
   );
 
   const renderPostsPage = () => {
     switch (apiStatus) {
       case apiStatusConstants.success:
-        return renderPostsView();
+        return postsData.length
+          ? renderPostsView()
+          : renderNoSearchResultsView();
       case apiStatusConstants.failure:
         return renderFailureView();
       case apiStatusConstants.loading:
@@ -150,14 +171,13 @@ const Home = () => {
   };
 
   return (
-    <div className="bg-[#FAFAFA] h-[100%]">
+    <div className="bg-[#FAFAFA]">
       <>
         <Header />
-        <Stories />
         {renderPostsPage()}
       </>
     </div>
   );
 };
 
-export default Home;
+export default SearchPosts;

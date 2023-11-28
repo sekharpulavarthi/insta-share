@@ -1,9 +1,10 @@
 import Cookies from "js-cookie";
 import React, { useEffect, useState } from "react";
-import Loader from "react-loader-spinner";
 import { useParams } from "react-router-dom";
 import Header from "../Header";
 import { BsGrid3X3 } from "react-icons/bs";
+import LoadingView from "../LoadingView";
+import NoPostsView from "../NoPostsView";
 
 const apiStatusConstatnts = {
   initial: "INITIAL",
@@ -58,27 +59,26 @@ const UserProfileDetails = () => {
     }
   };
 
-  const renderLoadingView = () => {
-    return (
-      <div className="products-loader-container">
-        <Loader type="ThreeDots" color="#0b69ff" height="50" width="50" />
-      </div>
-    );
-  };
-
   const renderFailureView = () => (
-    <div className="products-error-view-container">
-      <img
-        src="https://assets.ccbp.in/frontend/react-js/nxt-trendz/nxt-trendz-products-error-view.png"
-        alt="all-products-error"
-        className="products-failure-img"
-      />
-      <h1 className="product-failure-heading-text">
-        Oops! Something Went Wrong
-      </h1>
-      <p className="products-failure-description">
-        We are having some trouble processing your request. Please try again.
-      </p>
+    <div className="w-full flex justify-center h-screen">
+      <div className="w-[75%] flex justify-center items-center border">
+        <div className="flex flex-col justify-center items-center w-[50%]">
+          <img
+            src="https://res.cloudinary.com/dafvz3qwu/image/upload/v1701149344/alert-triangle_zn9pox.svg"
+            alt="all-stories-error"
+            className="w-12 h-12 mb-4"
+          />
+          <h1 className="text-base mb-4">
+            Something went wrong. Please try again
+          </h1>
+          <button
+            onClick={getProfileDetails}
+            className="bg-[#4094EF] text-base text-white py-1 px-3 rounded-md"
+          >
+            Try again
+          </button>
+        </div>
+      </div>
     </div>
   );
 
@@ -97,8 +97,7 @@ const UserProfileDetails = () => {
 
     return (
       <>
-        <Header />
-        <div className="bg-[#FAFAFA]">
+        <div className="bg-[#FAFAFA] h-screen">
           <div className="flex flex-col items-center py-8 ">
             <div className="flex flex-col items-start w-[75%]">
               <div className="flex w-[90%] pb-16">
@@ -147,17 +146,21 @@ const UserProfileDetails = () => {
                 <BsGrid3X3 className="mr-2" />
                 <p>Posts</p>
               </div>
-              <ul className="flex frex-wrap justify-between">
-                {posts.map((postItem) => (
-                  <li className="list-none" key={postItem.id}>
-                    <img
-                      src={postItem.image}
-                      alt={postItem.id}
-                      className="w-[330px] h-[330px]"
-                    />
-                  </li>
-                ))}
-              </ul>
+              {posts ? (
+                <ul className="flex frex-wrap justify-between">
+                  {posts.map((postItem) => (
+                    <li className="list-none" key={postItem.id}>
+                      <img
+                        src={postItem.image}
+                        alt={postItem.id}
+                        className="w-[340px] h-[340px]"
+                      />
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <NoPostsView />
+              )}
             </div>
           </div>
         </div>
@@ -172,13 +175,18 @@ const UserProfileDetails = () => {
       case apiStatusConstatnts.failure:
         return renderFailureView();
       case apiStatusConstatnts.loading:
-        return renderLoadingView();
+        return <LoadingView />;
       default:
         return null;
     }
   };
 
-  return <div>{renderUserProfileDetailsPage()}</div>;
+  return (
+    <div>
+      <Header />
+      {renderUserProfileDetailsPage()}
+    </div>
+  );
 };
 
 export default UserProfileDetails;

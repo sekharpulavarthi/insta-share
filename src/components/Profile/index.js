@@ -4,6 +4,7 @@ import Loader from "react-loader-spinner";
 import { useParams } from "react-router-dom";
 import Header from "../Header";
 import { BsGrid3X3 } from "react-icons/bs";
+import LoadingView from "../LoadingView";
 
 const apiStatusConstatnts = {
   initial: "INITIAL",
@@ -50,7 +51,7 @@ const Profile = () => {
 
     if (response.ok) {
       const jsonData = await response.json();
-      console.log(jsonData);
+
       const updatedData = getFormattedData(jsonData.profile);
       setApiStatus(apiStatusConstatnts.success);
       setProfileData(updatedData);
@@ -59,27 +60,26 @@ const Profile = () => {
     }
   };
 
-  const renderLoadingView = () => {
-    return (
-      <div className="products-loader-container">
-        <Loader type="ThreeDots" color="#0b69ff" height="50" width="50" />
-      </div>
-    );
-  };
-
   const renderFailureView = () => (
-    <div className="products-error-view-container">
-      <img
-        src="https://assets.ccbp.in/frontend/react-js/nxt-trendz/nxt-trendz-products-error-view.png"
-        alt="all-products-error"
-        className="products-failure-img"
-      />
-      <h1 className="product-failure-heading-text">
-        Oops! Something Went Wrong
-      </h1>
-      <p className="products-failure-description">
-        We are having some trouble processing your request. Please try again.
-      </p>
+    <div className="w-full flex justify-center h-screen">
+      <div className="w-[75%] flex justify-center items-center border">
+        <div className="flex flex-col justify-center items-center w-[50%]">
+          <img
+            src="https://res.cloudinary.com/dafvz3qwu/image/upload/v1701149344/alert-triangle_zn9pox.svg"
+            alt="all-stories-error"
+            className="w-12 h-12 mb-4"
+          />
+          <h1 className="text-base mb-4">
+            Something went wrong. Please try again
+          </h1>
+          <button
+            onClick={getProfileDetails}
+            className="bg-[#4094EF] text-base text-white py-1 px-3 rounded-md"
+          >
+            Try again
+          </button>
+        </div>
+      </div>
     </div>
   );
 
@@ -173,7 +173,7 @@ const Profile = () => {
       case apiStatusConstatnts.failure:
         return renderFailureView();
       case apiStatusConstatnts.loading:
-        return renderLoadingView();
+        return <LoadingView />;
       default:
         return null;
     }

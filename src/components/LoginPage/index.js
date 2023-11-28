@@ -18,7 +18,7 @@ const LoginPage = () => {
 
     const response = await fetch("https://apis.ccbp.in/login", options);
     const jsonData = await response.json();
-    console.log(jsonData);
+
     if (response.ok) {
       onSubmitSuccess(jsonData.jwt_token);
     } else {

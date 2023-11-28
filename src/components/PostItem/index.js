@@ -1,8 +1,13 @@
-import React from "react";
+import Cookies from "js-cookie";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { BsHeart } from "react-icons/bs";
+import { FaRegComment } from "react-icons/fa";
+import { BiShareAlt } from "react-icons/bi";
+import { FcLike } from "react-icons/fc";
 
 const PostItem = (props) => {
-  const { postItemDetails } = props;
+  const { postItemDetails, updateLikeStatus } = props;
   const {
     comments,
     createdAt,
@@ -12,6 +17,7 @@ const PostItem = (props) => {
     profilePic,
     userName,
     userId,
+    likeStatus,
   } = postItemDetails;
 
   const { caption, imageUrl } = postDetails;
@@ -35,21 +41,23 @@ const PostItem = (props) => {
       />
       <div className="py-4 px-5">
         <div className="flex mb-3">
-          <img
-            src="https://res.cloudinary.com/dafvz3qwu/image/upload/v1700984263/Frame_1437_eu1nyl.svg"
-            alt="like-icon"
-            className="w-6 mr-3"
-          />
-          <img
-            src="https://res.cloudinary.com/dafvz3qwu/image/upload/v1700984263/Frame_1450_lkfb07.svg"
-            alt="comment-icon"
-            className="w-6 mr-3"
-          />
-          <img
-            src="https://res.cloudinary.com/dafvz3qwu/image/upload/v1700984263/Frame_1437_eu1nyl.svg"
-            alt="like-icon"
-            className="w-6 mr-3"
-          />
+          {likeStatus === false ? (
+            <button
+              onClick={() => updateLikeStatus(!likeStatus, postId)}
+              type="button"
+            >
+              <BsHeart className="w-6 mr-3" />
+            </button>
+          ) : (
+            <button
+              onClick={() => updateLikeStatus(!likeStatus, postId)}
+              type="button"
+            >
+              <FcLike className="w-6 mr-3" />
+            </button>
+          )}
+          <FaRegComment className="w-6 mr-3" />
+          <BiShareAlt className="w-6 mr-3" />
         </div>
         <p className="mb-1 text-xs font-bold">{likesCount} likes</p>
         <p className="mb-1 text-xs">{caption}</p>
