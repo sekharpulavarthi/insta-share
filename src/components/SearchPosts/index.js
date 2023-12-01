@@ -1,10 +1,8 @@
 import Header from "../Header";
 import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
-import Loader from "react-loader-spinner";
 import PostItem from "../PostItem";
 import { useLocation } from "react-router-dom/cjs/react-router-dom.min";
-import Stories from "../Stories";
 import LoadingView from "../LoadingView";
 
 const apiStatusConstants = {

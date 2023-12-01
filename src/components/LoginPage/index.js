@@ -2,6 +2,22 @@ import { useState } from "react";
 import Cookies from "js-cookie";
 import { useHistory } from "react-router-dom";
 
+import {
+  FormContainer,
+  LoginImg,
+  LoginForm,
+  IconContainerDiv,
+  IconContainer,
+  IconTopPart,
+  IconBottomPart,
+  LogoText,
+  InputContainer,
+  InputLabel,
+  LoginInput,
+  ErrorMessage,
+  LoginButton,
+} from "./styledComponents";
+
 const LoginPage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -47,75 +63,48 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="flex items-center justify-center h-screen">
-      <img
+    <FormContainer>
+      <LoginImg
         src="https://res.cloudinary.com/dafvz3qwu/image/upload/v1700579963/Layer_2login-page-img_nqgn3p.png"
         alt="login-page-img"
-        className="w-[582px] h-[373px] mr-10"
       />
-      <form
-        className="w-[456px] h-[490px] flex flex-col items-center shadow-lg pt-12"
-        onSubmit={onSubmitForm}
-      >
-        <div className="flex flex-col items-center">
-          <div className="h-10 w-20 flex flex-col items-center relative">
-            <img
+      <LoginForm onSubmit={onSubmitForm}>
+        <IconContainerDiv>
+          <IconContainer>
+            <IconTopPart
               src="https://res.cloudinary.com/dafvz3qwu/image/upload/v1700496060/Vectorinsta-share-icon_pcz8o9.png"
               alt=""
-              className="w-12 h-6"
             />
-            <img
+            <IconBottomPart
               src="https://res.cloudinary.com/dafvz3qwu/image/upload/v1700495613/Vector_1x_ujdtu3.png"
               alt=""
-              className="w-20 h-6 absolute top-3"
             />
-          </div>
-          <p className="w-[122px] h-[32px] font-bold text-center mb-8">
-            Insta Share
-          </p>
-        </div>
+          </IconContainer>
+          <LogoText>Insta Share</LogoText>
+        </IconContainerDiv>
 
-        <div className="flex flex-col">
-          <label
-            htmlFor="username"
-            className="w-[65px] h-4 font-bold font-roboto mb-3"
-          >
-            USERNAME
-          </label>
-          <input
+        <InputContainer>
+          <InputLabel htmlFor="username">USERNAME</InputLabel>
+          <LoginInput
             id="username"
             value={username}
             type="text"
             onChange={(e) => setUsername(e.target.value)}
-            className="w-[360px] bg-[#EEEEEE] h-10 mb-6 pl-4 focus:outline-none"
           />
-        </div>
-        <div className="flex flex-col">
-          <label
-            htmlFor="password"
-            className="w-[65px] h-4 font-bold font-roboto mb-3"
-          >
-            PASSWORD
-          </label>
-          <input
+        </InputContainer>
+        <InputContainer>
+          <InputLabel htmlFor="password">PASSWORD</InputLabel>
+          <LoginInput
             id="password"
             value={password}
             type="password"
             onChange={(e) => setPassword(e.target.value)}
-            className="w-[360px] bg-[#EEEEEE] h-10 pl-4 focus:outline-none"
           />
-        </div>
-        {shouldShowError && (
-          <p className="text-[#EF4444] self-start ml-12 ">{errorMsg}</p>
-        )}
-        <button
-          type="submit"
-          className="text-white bg-[#4094EF] w-[360px] h-10 rounded-md mt-6"
-        >
-          Login
-        </button>
-      </form>
-    </div>
+        </InputContainer>
+        {shouldShowError && <ErrorMessage>{errorMsg}</ErrorMessage>}
+        <LoginButton type="submit">Login</LoginButton>
+      </LoginForm>
+    </FormContainer>
   );
 };
 

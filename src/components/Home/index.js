@@ -2,9 +2,10 @@ import Header from "../Header";
 import Stories from "../Stories";
 import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
-import Loader from "react-loader-spinner";
 import PostItem from "../PostItem";
 import LoadingView from "../LoadingView";
+import FailureView from "../FailureView";
+import { HomeContainer, PostsContainer } from "./styledComponents";
 
 const apiStatusConstants = {
   initial: "INITIAL",
@@ -53,8 +54,11 @@ const Home = () => {
       "https://apis.ccbp.in/insta-share/posts",
       options
     );
+
     if (response.ok) {
       const jsonData = await response.json();
+
+      console.log(jsonData);
 
       setApiStatus(apiStatusConstants.success);
 
@@ -101,31 +105,8 @@ const Home = () => {
     }
   };
 
-  const renderFailureView = () => (
-    <div className="w-full flex justify-center h-screen">
-      <div className="w-[75%] flex justify-center items-center border">
-        <div className="flex flex-col justify-center items-center w-[50%]">
-          <img
-            src="https://res.cloudinary.com/dafvz3qwu/image/upload/v1701149344/alert-triangle_zn9pox.svg"
-            alt="all-stories-error"
-            className="w-12 h-12 mb-4"
-          />
-          <h1 className="text-base mb-4">
-            Something went wrong. Please try again
-          </h1>
-          <button
-            onClick={getPostsData}
-            className="bg-[#4094EF] text-base text-white py-1 px-3 rounded-md"
-          >
-            Try again
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-
   const renderPostsView = () => (
-    <div className="w-full flex flex-col justify-center items-center">
+    <PostsContainer>
       {postsData.map((postItem) => (
         <PostItem
           postItemDetails={postItem}
@@ -133,7 +114,7 @@ const Home = () => {
           updateLikeStatus={updateLikeStatus}
         />
       ))}
-    </div>
+    </PostsContainer>
   );
 
   const renderPostsPage = () => {
@@ -141,7 +122,7 @@ const Home = () => {
       case apiStatusConstants.success:
         return renderPostsView();
       case apiStatusConstants.failure:
-        return renderFailureView();
+        return <FailureView onClickFunction={getPostsData} />;
       case apiStatusConstants.loading:
         return <LoadingView />;
       default:
@@ -150,13 +131,13 @@ const Home = () => {
   };
 
   return (
-    <div className="bg-[#FAFAFA] h-[100%]">
+    <HomeContainer>
       <>
         <Header />
         <Stories />
         {renderPostsPage()}
       </>
-    </div>
+    </HomeContainer>
   );
 };
 

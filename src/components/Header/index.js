@@ -1,11 +1,34 @@
 import Cookies from "js-cookie";
 import { useState } from "react";
-import { useHistory, Link, useNavigate } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { useRouteMatch } from "react-router-dom/cjs/react-router-dom.min";
+import { IoIosMenu } from "react-icons/io";
+import {
+  HeaderDiv,
+  HeaderLeftPart,
+  LogoLink,
+  LogoDiv,
+  InstaIcon,
+  InstaVector,
+  InstaLogoText,
+  SearchDiv,
+  SearchInput,
+  SearchButton,
+  SearchIcon,
+  LinkDiv,
+  HomeLink,
+  ProfileLink,
+  LogoutButton,
+  HeaderContainer,
+  SearchText,
+  HeaderLinkMobileDiv,
+} from "./styledComponents";
 
 const Header = (props) => {
   const history = useHistory();
   const [searchInput, setSearchInput] = useState("");
+  const [shouldShowSearchInput, setShouldShowSearchInput] = useState(false);
+  const [shouldShowMenuItems, setShouldShowMenuItems] = useState(false);
   const match = useRouteMatch();
   const { path } = match;
 
@@ -20,81 +43,86 @@ const Header = (props) => {
   };
 
   const renderSearchInput = () => (
-    <div className="flex border border-[#DBDBDB]">
-      <input
+    <SearchDiv>
+      <SearchInput
         value={searchInput}
         onChange={(e) => setSearchInput(e.target.value)}
         type="search"
         placeholder="Search Caption"
-        className="bg-[#FAFAFA] pl-2 w-[180px] focus:outline-none h-[26px]"
       />
-      <button
-        onClick={onClickSearch}
-        className="w-[34px] h-[26px] bg-[#DBDBDB] flex items-center justify-center"
-      >
-        <img
+      <SearchButton onClick={onClickSearch}>
+        <SearchIcon
           src="https://res.cloudinary.com/dafvz3qwu/image/upload/v1700586565/searchsearch-icon_dwqyt4.svg"
           alt="search-icon"
-          className="w-[10px] h-[10px]"
         />
-      </button>
-    </div>
+      </SearchButton>
+    </SearchDiv>
   );
 
   return (
-    <div className="w-full flex justify-center bg-white">
-      <div className="flex justify-between h-[64px] bg-[#FFF] border-bottom border-b-[#DBDBDB] py-8 w-[75%]">
-        <div className="flex items-center">
-          <Link to="/" className="flex items-center">
-            <div className="h-10 w-20 flex flex-col items-center relative">
-              <img
-                src="https://res.cloudinary.com/dafvz3qwu/image/upload/v1700496060/Vectorinsta-share-icon_pcz8o9.png"
-                alt=""
-                className="w-10 h-6"
-              />
-              <img
-                src="https://res.cloudinary.com/dafvz3qwu/image/upload/v1700495613/Vector_1x_ujdtu3.png"
-                alt=""
-                className="w-[59px] h-6 absolute top-2"
-              />
-            </div>
-            <p className="w-[102px] h-[24px] font-bold">Insta Share</p>
-          </Link>
-        </div>
+    <HeaderContainer>
+      <div className="w-[75%]">
+        <HeaderDiv>
+          <HeaderLeftPart>
+            <LogoLink to="/">
+              <LogoDiv>
+                <InstaIcon
+                  src="https://res.cloudinary.com/dafvz3qwu/image/upload/v1700496060/Vectorinsta-share-icon_pcz8o9.png"
+                  alt=""
+                />
+                <InstaVector
+                  src="https://res.cloudinary.com/dafvz3qwu/image/upload/v1700495613/Vector_1x_ujdtu3.png"
+                  alt=""
+                />
+              </LogoDiv>
+              <InstaLogoText>Insta Share</InstaLogoText>
+            </LogoLink>
+          </HeaderLeftPart>
 
-        <div className="flex items-center">
-          {renderSearchInput()}
-          <Link to="/">
-            <p
-              className={
-                path === "/"
-                  ? "ml-8 text-xs font-bold text-[#4094EF]"
-                  : "ml-8 text-xs font-bold"
-              }
-            >
+          <LinkDiv>
+            {renderSearchInput()}
+            <HomeLink to="/" path={path}>
               Home
-            </p>
-          </Link>
-          <Link to="/my-profile">
-            <p
-              className={
-                path === "/my-profile"
-                  ? "ml-4 text-xs font-bold text-[#4094EF]"
-                  : "ml-4 text-xs font-bold"
-              }
-            >
+            </HomeLink>
+            <ProfileLink to="/my-profile" path={path}>
               Profile
-            </p>
-          </Link>
-          <button
-            onClick={onClickLogout}
-            className="text-white text-xs w-[86px] rounded-sm py-2 px-5 bg-[#4094EF] ml-6"
-          >
-            Logout
-          </button>
-        </div>
+            </ProfileLink>
+            <LogoutButton onClick={onClickLogout}>Logout</LogoutButton>
+          </LinkDiv>
+          <HeaderLinkMobileDiv>
+            {shouldShowMenuItems ? (
+              <div className="flex items-center">
+                <HomeLink to="/" path={path}>
+                  Home
+                </HomeLink>
+                {shouldShowSearchInput && (
+                  <SearchText
+                    onClick={() => {
+                      setShouldShowSearchInput(true);
+                      setShouldShowMenuItems(false);
+                    }}
+                  >
+                    Search
+                  </SearchText>
+                )}
+                <ProfileLink to="/my-profile" path={path}>
+                  Profile
+                </ProfileLink>
+                <LogoutButton onClick={onClickLogout}>Logout</LogoutButton>
+              </div>
+            ) : (
+              <IoIosMenu
+                onClick={() => {
+                  setShouldShowMenuItems(true);
+                  setShouldShowSearchInput(false);
+                }}
+              />
+            )}
+          </HeaderLinkMobileDiv>
+        </HeaderDiv>
+        <>{shouldShowSearchInput && renderSearchInput()}</>
       </div>
-    </div>
+    </HeaderContainer>
   );
 };
 
