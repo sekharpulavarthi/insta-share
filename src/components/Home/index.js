@@ -58,8 +58,6 @@ const Home = () => {
     if (response.ok) {
       const jsonData = await response.json();
 
-      console.log(jsonData);
-
       setApiStatus(apiStatusConstants.success);
 
       const updatedData = jsonData.posts.map((postItem) =>
@@ -133,7 +131,6 @@ const Home = () => {
   return (
     <HomeContainer>
       <>
-        <Header />
         <Stories />
         {renderPostsPage()}
       </>

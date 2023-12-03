@@ -7,11 +7,11 @@ export const HeaderContainer = styled.div`
 `;
 
 export const HeaderDiv = styled.div`
-  ${tw`flex justify-between h-[64px] bg-[#FFF] border-b-[#DBDBDB] py-8 items-center border`};
+  ${tw`flex justify-between h-[64px] bg-[#FFF] border-b-[#DBDBDB] py-8 items-center w-full`};
 `;
 
 export const HeaderLeftPart = styled.div`
-  ${tw`flex items-center`};
+  ${tw`flex items-center w-[50%]`};
 `;
 
 export const LogoLink = styled(Link)`
@@ -39,7 +39,15 @@ export const SearchDiv = styled.div`
 `;
 
 export const SearchInput = styled.input`
-  ${tw`bg-[#FAFAFA] pl-2 w-[180px] focus:outline-none h-[26px]`};
+  ${tw`bg-[#FAFAFA] pl-2 w-[180px] h-[26px] outline-none`};
+
+  @media (max-width: 768px) {
+    ${tw`w-[280px]`}
+  }
+
+  @media (min-width: 769px) {
+    ${tw`w-[180px]`}
+  }
 `;
 
 export const SearchButton = styled.button`
@@ -51,19 +59,16 @@ export const SearchIcon = styled.img`
 `;
 
 export const LinkDiv = styled.div`
-  ${tw`flex items-center ml-8`};
-  @media (max-width: 768px) {
-    display: none;
-  }
+  ${tw`flex items-center justify-around w-[50%]`};
 `;
 
 export const HomeLink = styled(Link)`
-  ${tw`text-xs font-bold ml-4`}
+  ${tw`text-xs font-bold`}
   color: ${(props) => props.path === "/" && "#4094EF"};
 `;
 
 export const ProfileLink = styled(Link)`
-  ${tw`text-xs font-bold ml-4`};
+  ${tw`text-xs font-bold`};
   color: ${(props) => props.path === "/my-profile" && "#4094EF"};
 `;
 
@@ -72,11 +77,17 @@ export const LogoutButton = styled.button`
 `;
 
 export const SearchText = styled.p`
-  ${tw`text-xs font-bold ml-4`}
+  ${tw`text-xs font-bold`}
 `;
 
-export const HeaderLinkMobileDiv = styled.div`
-  @media (min-width: 769px) {
-    display: none;
-  }
+export const HeaderDiv1 = styled.div`
+  ${tw``}
+`;
+
+export const HeaderMobileViewItemsDiv = styled.div`
+  ${tw`flex items-center border justify-around`}
+`;
+
+export const SearchDivMobileViewContainer = styled.div`
+  ${tw`w-full flex items-center justify-center`}
 `;

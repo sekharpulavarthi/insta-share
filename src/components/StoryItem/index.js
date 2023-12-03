@@ -1,20 +1,18 @@
-import React from "react";
+import {
+  StoryItemContainer,
+  StoryUserName,
+  StoryImg,
+} from "./styledComponents";
 
 const StoryItem = (props) => {
   const { storyData } = props;
   const { storyUrl, userName } = storyData;
 
   return (
-    <li className="w-[70px]">
-      <img
-        className="w-[70px] h-[70px] rounded-full"
-        src={storyUrl}
-        alt={userName}
-      />
-      <p className="mt-2 text-xs overflow-hidden whitespace-nowrap overflow-ellipsis">
-        {userName}
-      </p>
-    </li>
+    <StoryItemContainer>
+      <StoryImg src={storyUrl} alt={userName} />
+      <StoryUserName>{userName}</StoryUserName>
+    </StoryItemContainer>
   );
 };
 

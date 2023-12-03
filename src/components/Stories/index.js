@@ -8,6 +8,13 @@ import "slick-carousel/slick/slick-theme.css";
 import Loader from "react-loader-spinner";
 import FailureView from "../FailureView";
 
+import {
+  StoriesContainer,
+  StoriesSubContainer,
+  StoriesLoadingViewContainer,
+  StoriesLoadingViewSubContainer,
+} from "./styledComponents";
+
 const apiStatusConstants = {
   initial: "INITIAL",
   success: "SUCCESS",
@@ -18,6 +25,9 @@ const apiStatusConstants = {
 const Stories = () => {
   const [storiesData, setStoriesData] = useState([]);
   const [apiStatus, setApiStatus] = useState(apiStatusConstants.initial);
+
+  const shouldDisplayonMinDevice = window.matchMedia("(max-width: 768px)")
+    .matches;
 
   useEffect(() => {
     getStoriesData();
@@ -52,29 +62,29 @@ const Stories = () => {
 
   const settings = {
     dots: false,
-    slidesToShow: 7,
+    slidesToShow: shouldDisplayonMinDevice ? 4 : 7,
     slidesToScroll: 1,
     infinite: false,
   };
 
   const renderStoriesSuccessView = () => (
-    <div className="flex justify-around bg-[#FAFAFA] h-[30%]">
-      <ul className="w-[75%] p-[40px] ">
+    <StoriesContainer className="flex justify-around bg-[#FAFAFA] h-[30%]">
+      <StoriesSubContainer className="w-[75%] p-[40px]">
         <Slider {...settings}>
           {storiesData.map((storyItem) => (
             <StoryItem storyData={storyItem} key={storyItem.userId} />
           ))}
         </Slider>
-      </ul>
-    </div>
+      </StoriesSubContainer>
+    </StoriesContainer>
   );
 
   const renderLoadingView = () => (
-    <div className="w-full flex justify-center items-center h-[200px]">
+    <StoriesLoadingViewContainer className="w-full flex justify-center items-center h-[200px]">
       <div className="loader-container" testid="loader">
         <Loader type="TailSpin" color="#4094EF" height={50} width={50} />
       </div>
-    </div>
+    </StoriesLoadingViewContainer>
   );
 
   const renderStoriesPage = () => {

@@ -1,9 +1,20 @@
-import Header from "../Header";
 import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
 import PostItem from "../PostItem";
-import { useLocation } from "react-router-dom/cjs/react-router-dom.min";
+import { useLocation } from "react-router-dom";
 import LoadingView from "../LoadingView";
+import FailureView from "../FailureView";
+
+import {
+  PostsSubContainer,
+  PostsPageContainer,
+  SearchResultsText,
+  PostsContainer,
+  NoSearchResultsViewContainer,
+  NoSearchResultsViewImg,
+  SearchNotFoundText,
+  TryDifferentKeyWordText,
+} from "./styledComponents";
 
 const apiStatusConstants = {
   initial: "INITIAL",
@@ -104,43 +115,24 @@ const SearchPosts = () => {
     }
   };
 
-  const renderFailureView = () => (
-    <div className="products-error-view-container">
-      <img
-        src="https://assets.ccbp.in/frontend/react-js/nxt-trendz/nxt-trendz-products-error-view.png"
-        alt="all-products-error"
-        className="products-failure-img"
-      />
-      <h1 className="product-failure-heading-text">
-        Oops! Something Went Wrong
-      </h1>
-      <p className="products-failure-description">
-        We are having some trouble processing your request. Please try again.
-      </p>
-    </div>
-  );
-
   const renderNoSearchResultsView = () => (
-    <div className="flex flex-col items-center h-screen justify-center">
-      <img
-        className="w-[500px] h-[420px]"
+    <NoSearchResultsViewContainer>
+      <NoSearchResultsViewImg
         alt="search-not-found"
         src="https://res.cloudinary.com/dwux3vh4t/image/upload/v1690380372/Group_jrlyey.png"
       />
-      <h1 className="text-2xl font-medium mb-4">Search Not Found</h1>
-      <p className="text-base text-center text-[#989898] mb-6">
+      <SearchNotFoundText>Search Not Found</SearchNotFoundText>
+      <TryDifferentKeyWordText>
         Try different keyword or try again.
-      </p>
-    </div>
+      </TryDifferentKeyWordText>
+    </NoSearchResultsViewContainer>
   );
 
   const renderPostsView = () => (
-    <div className="flex flex-col justify-center items-start">
-      <h1 className="w-[75%] self-center font-bold mt-4 mb-4">
-        Search Results
-      </h1>
-      <div className="w-full flex flex-col justify-center items-center">
-        <div className="flex flex-col justify-center items-center w-[100%]">
+    <PostsPageContainer>
+      <SearchResultsText>Search Results</SearchResultsText>
+      <PostsContainer>
+        <PostsSubContainer>
           {postsData.map((postItem) => (
             <PostItem
               postItemDetails={postItem}
@@ -148,9 +140,9 @@ const SearchPosts = () => {
               updateLikeStatus={updateLikeStatus}
             />
           ))}
-        </div>
-      </div>
-    </div>
+        </PostsSubContainer>
+      </PostsContainer>
+    </PostsPageContainer>
   );
 
   const renderPostsPage = () => {
@@ -160,7 +152,7 @@ const SearchPosts = () => {
           ? renderPostsView()
           : renderNoSearchResultsView();
       case apiStatusConstants.failure:
-        return renderFailureView();
+        return <FailureView />;
       case apiStatusConstants.loading:
         return <LoadingView />;
       default:
@@ -168,14 +160,7 @@ const SearchPosts = () => {
     }
   };
 
-  return (
-    <div className="bg-[#FAFAFA]">
-      <>
-        <Header />
-        {renderPostsPage()}
-      </>
-    </div>
-  );
+  return <>{renderPostsPage()}</>;
 };
 
 export default SearchPosts;

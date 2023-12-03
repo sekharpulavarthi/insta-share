@@ -7,22 +7,28 @@ import NotFound from "./components/NotFound";
 import UserProfileDetails from "./components/UserProfileDetails";
 import Profile from "./components/Profile";
 import SearchPosts from "./components/SearchPosts";
+import Header from "./components/Header";
 
 const App = () => {
   return (
     <BrowserRouter>
       <Switch>
         <Route path="/login" component={LoginPage} />
-        <ProtectedRoute exact path="/" component={Home} />
-        <ProtectedRoute
-          exact
-          path="/posts/:userId"
-          component={UserProfileDetails}
-        />
-        <ProtectedRoute exact path="/my-profile" component={Profile} />
-        <ProtectedRoute exact path="/posts" component={SearchPosts} />
         <Route path="/not-found" component={NotFound} />
-        <Redirect to="/not-found" />
+        <>
+          <Header />
+          <Switch>
+            <ProtectedRoute exact path="/" component={Home} />
+            <ProtectedRoute
+              exact
+              path="/posts/:userId"
+              component={UserProfileDetails}
+            />
+            <ProtectedRoute exact path="/my-profile" component={Profile} />
+            <ProtectedRoute exact path="/posts" component={SearchPosts} />
+            <Redirect to="/not-found" />
+          </Switch>
+        </>
       </Switch>
     </BrowserRouter>
   );

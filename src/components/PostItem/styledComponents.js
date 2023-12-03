@@ -1,6 +1,5 @@
 import tw from "twin.macro";
 import styled from "styled-components";
-import { Link } from "react-router-dom/cjs/react-router-dom.min";
 
 export const PostItemContainer = styled.div`
   ${tw`w-[75%] mb-8 border border-[#DBDBDB]`};
@@ -20,6 +19,9 @@ export const UserNameText = styled.p`
 
 export const PostImg = styled.img`
   ${tw`w-full h-[614px] object-fill`};
+  @media (max-width: 768px) {
+    ${tw`min-w-[250px] h-[400px]`}
+  }
 `;
 
 export const PostItemDetailsContainer = styled.div`

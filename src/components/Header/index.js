@@ -1,8 +1,12 @@
 import Cookies from "js-cookie";
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
-import { useRouteMatch } from "react-router-dom/cjs/react-router-dom.min";
-import { IoIosMenu } from "react-icons/io";
+import {
+  useRouteMatch,
+  withRouter,
+} from "react-router-dom/cjs/react-router-dom.min";
+import { IoIosMenu, IoMdCloseCircle } from "react-icons/io";
+
 import {
   HeaderDiv,
   HeaderLeftPart,
@@ -21,16 +25,24 @@ import {
   LogoutButton,
   HeaderContainer,
   SearchText,
-  HeaderLinkMobileDiv,
+  HeaderDiv1,
+  HeaderMobileViewItemsDiv,
+  SearchDivMobileViewContainer,
 } from "./styledComponents";
 
-const Header = (props) => {
+const Header = () => {
   const history = useHistory();
   const [searchInput, setSearchInput] = useState("");
   const [shouldShowSearchInput, setShouldShowSearchInput] = useState(false);
   const [shouldShowMenuItems, setShouldShowMenuItems] = useState(false);
+
   const match = useRouteMatch();
+
   const { path } = match;
+  const [currentPath, setCurrentPath] = useState(path);
+
+  const shouldDisplayonMinDevice = window.matchMedia("(max-width: 768px)")
+    .matches;
 
   const onClickLogout = () => {
     const jwtToken = Cookies.get("jwt_token");
@@ -39,7 +51,15 @@ const Header = (props) => {
   };
 
   const onClickSearch = () => {
-    history.replace(`/posts?search=${searchInput}`);
+    if (searchInput === "") {
+      history.replace("/");
+    } else history.replace(`/posts?search=${searchInput}`);
+  };
+
+  const onEnterSearchInput = (event) => {
+    if (event.key === "Enter") {
+      onClickSearch();
+    }
   };
 
   const renderSearchInput = () => (
@@ -49,6 +69,7 @@ const Header = (props) => {
         onChange={(e) => setSearchInput(e.target.value)}
         type="search"
         placeholder="Search Caption"
+        onKeyDown={(e) => onEnterSearchInput(e)}
       />
       <SearchButton onClick={onClickSearch}>
         <SearchIcon
@@ -61,7 +82,7 @@ const Header = (props) => {
 
   return (
     <HeaderContainer>
-      <div className="w-[75%]">
+      <HeaderDiv1 className="w-[75%]">
         <HeaderDiv>
           <HeaderLeftPart>
             <LogoLink to="/">
@@ -79,51 +100,82 @@ const Header = (props) => {
             </LogoLink>
           </HeaderLeftPart>
 
-          <LinkDiv>
-            {renderSearchInput()}
-            <HomeLink to="/" path={path}>
+          {shouldDisplayonMinDevice ? (
+            <IoIosMenu
+              className="w-6 h-6"
+              onClick={() => {
+                setShouldShowMenuItems(true);
+                setShouldShowSearchInput(false);
+              }}
+            />
+          ) : (
+            <LinkDiv>
+              {renderSearchInput()}
+
+              <HomeLink
+                to="/"
+                onClick={() => setCurrentPath("/")}
+                path={currentPath}
+              >
+                Home
+              </HomeLink>
+
+              <ProfileLink
+                to="/my-profile"
+                onClick={() => setCurrentPath("/my-profile")}
+                path={currentPath}
+              >
+                Profile
+              </ProfileLink>
+
+              <LogoutButton onClick={onClickLogout}>Logout</LogoutButton>
+            </LinkDiv>
+          )}
+        </HeaderDiv>
+        {shouldShowMenuItems && (
+          <HeaderMobileViewItemsDiv>
+            <HomeLink
+              to="/"
+              onClick={() => setCurrentPath("/")}
+              path={currentPath}
+            >
               Home
             </HomeLink>
-            <ProfileLink to="/my-profile" path={path}>
+
+            {!shouldShowSearchInput && (
+              <SearchText
+                onClick={() => {
+                  setShouldShowSearchInput(true);
+                  setShouldShowMenuItems(false);
+                }}
+              >
+                Search
+              </SearchText>
+            )}
+
+            <ProfileLink
+              to="/my-profile"
+              onClick={() => setCurrentPath("/")}
+              path={currentPath}
+            >
               Profile
             </ProfileLink>
+
             <LogoutButton onClick={onClickLogout}>Logout</LogoutButton>
-          </LinkDiv>
-          <HeaderLinkMobileDiv>
-            {shouldShowMenuItems ? (
-              <div className="flex items-center">
-                <HomeLink to="/" path={path}>
-                  Home
-                </HomeLink>
-                {shouldShowSearchInput && (
-                  <SearchText
-                    onClick={() => {
-                      setShouldShowSearchInput(true);
-                      setShouldShowMenuItems(false);
-                    }}
-                  >
-                    Search
-                  </SearchText>
-                )}
-                <ProfileLink to="/my-profile" path={path}>
-                  Profile
-                </ProfileLink>
-                <LogoutButton onClick={onClickLogout}>Logout</LogoutButton>
-              </div>
-            ) : (
-              <IoIosMenu
-                onClick={() => {
-                  setShouldShowMenuItems(true);
-                  setShouldShowSearchInput(false);
-                }}
-              />
-            )}
-          </HeaderLinkMobileDiv>
-        </HeaderDiv>
-        <>{shouldShowSearchInput && renderSearchInput()}</>
-      </div>
+            <IoMdCloseCircle
+              className="w-6 h-6"
+              onClick={() => {
+                setShouldShowMenuItems(false);
+              }}
+            />
+          </HeaderMobileViewItemsDiv>
+        )}
+        <SearchDivMobileViewContainer>
+          {shouldShowSearchInput && renderSearchInput()}
+        </SearchDivMobileViewContainer>
+      </HeaderDiv1>
     </HeaderContainer>
   );
 };
 
-export default Header;
+export default withRouter(Header);

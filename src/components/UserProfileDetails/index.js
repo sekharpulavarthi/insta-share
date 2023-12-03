@@ -1,7 +1,6 @@
 import Cookies from "js-cookie";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import Header from "../Header";
 import { BsGrid3X3 } from "react-icons/bs";
 import LoadingView from "../LoadingView";
 import NoPostsView from "../NoPostsView";
@@ -35,6 +34,11 @@ import {
   PostsImgsContainer,
   PostImgDiv,
   PostImg,
+  ProfileImgMobileContainer,
+  UserDetailsMobileViewContainer,
+  PostsTextContainer,
+  FollowersTextContainer,
+  FollowingTextContainer,
 } from "./styledComponents";
 
 const apiStatusConstatnts = {
@@ -66,6 +70,9 @@ const UserProfileDetails = () => {
     posts: data.posts,
     stories: data.stories,
   });
+
+  const shouldDisplayonMinDevice = window.matchMedia("(max-width: 768px)")
+    .matches;
 
   const getProfileDetails = async () => {
     setApiStatus(apiStatusConstatnts.loading);
@@ -108,28 +115,53 @@ const UserProfileDetails = () => {
         <ProfileContainer>
           <ProfileContainerHeaderPart>
             <ProfileContainerHeaderPartDiv>
-              <ProfileImgContainer>
-                <ProfileImg src={profilePic} alt={userName} />
-                <UserDetailsContainer>
+              {!shouldDisplayonMinDevice ? (
+                <ProfileImgContainer>
+                  <ProfileImg src={profilePic} alt={userName} />
+                  <UserDetailsContainer>
+                    <Username>{userName}</Username>
+                    <UserAccountDetails>
+                      <PostsTextContainer>
+                        <PostsCount>{postsCount}</PostsCount>
+                        <PostsText>posts</PostsText>
+                      </PostsTextContainer>
+                      <FollowersTextContainer>
+                        <FollowersCount>{followersCount}</FollowersCount>
+                        <FollowersText>followers</FollowersText>
+                      </FollowersTextContainer>
+                      <FollowingTextContainer>
+                        <FollowingCount>{followingCount}</FollowingCount>
+                        <FollowingText>following</FollowingText>
+                      </FollowingTextContainer>
+                    </UserAccountDetails>
+                    <UserID>{userId}</UserID>
+                    <UserBio>{userBio}</UserBio>
+                  </UserDetailsContainer>
+                </ProfileImgContainer>
+              ) : (
+                <ProfileImgMobileContainer>
                   <Username>{userName}</Username>
-                  <UserAccountDetails>
-                    <PostsText>
-                      <PostsCount>{postsCount}</PostsCount>
-                      posts
-                    </PostsText>
-                    <FollowersText>
-                      <FollowersCount>{followersCount}</FollowersCount>
-                      followers
-                    </FollowersText>
-                    <FollowingText>
-                      <FollowingCount>{followingCount}</FollowingCount>
-                      following
-                    </FollowingText>
-                  </UserAccountDetails>
+                  <UserDetailsMobileViewContainer>
+                    <ProfileImg src={profilePic} alt={userName} />
+                    <UserAccountDetails>
+                      <PostsTextContainer>
+                        <PostsCount>{postsCount}</PostsCount>
+                        <PostsText>posts</PostsText>
+                      </PostsTextContainer>
+                      <FollowersTextContainer>
+                        <FollowersCount>{followersCount}</FollowersCount>
+                        <FollowersText>followers</FollowersText>
+                      </FollowersTextContainer>
+                      <FollowingTextContainer>
+                        <FollowingCount>{followingCount}</FollowingCount>
+                        <FollowingText>following</FollowingText>
+                      </FollowingTextContainer>
+                    </UserAccountDetails>
+                  </UserDetailsMobileViewContainer>
                   <UserID>{userId}</UserID>
                   <UserBio>{userBio}</UserBio>
-                </UserDetailsContainer>
-              </ProfileImgContainer>
+                </ProfileImgMobileContainer>
+              )}
               <StoriesContainer>
                 {stories.map((storyItem) => (
                   <StoryImg
@@ -181,12 +213,7 @@ const UserProfileDetails = () => {
     }
   };
 
-  return (
-    <div>
-      <Header />
-      {renderUserProfileDetailsPage()}
-    </div>
-  );
+  return <div>{renderUserProfileDetailsPage()}</div>;
 };
 
 export default UserProfileDetails;
